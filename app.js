@@ -46,7 +46,8 @@ d3.request("raster-examples/sfctmp.tiff")
             return d3.interpolatePlasma(d);
         });
 
-
+        console.log(colors);
+        console.log(intervals)
         geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
         var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
 
@@ -56,5 +57,16 @@ d3.request("raster-examples/sfctmp.tiff")
             context.fillStyle = colors[i];
             path(d);
             context.fill();
+
+        console.log(d3.scale.linear().domain([0, 0.5, 1]).range(["blue", "green", "red"]))
+        // colorbar : from http://bl.ocks.org/chrisbrich/4209888
+        var svg = d3.select("body").append("svg")
+            .attr("width", 1000)
+            .attr("height", 1000),
+        g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+        cb = colorBar() //.color(colors).size(350).lineWidth(80).precision(4);
+        //cb = colorBar().color(d3.scale.linear().domain([-1, 0, 1]).range(["red", "green", "blue"])).size(350).lineWidth(80).precision(4);
+        g.call(cb);
+
         });
     });

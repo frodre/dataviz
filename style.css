@@ -1,3 +1,4 @@
+/* time slider styling */
 .ticks {
     font: 10px sans-serif;
 }
@@ -22,7 +23,7 @@
 .track-overlay {
     pointer-events: stroke;
     stroke-width: 50px;
-    cursor: crosshair;
+    cursor: pointer;
 }
 
 .handle {

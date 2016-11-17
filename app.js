@@ -61,7 +61,6 @@ d3.request("raster-examples/sfctmp.tiff")
 
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
-
 // min/max timeslider values
 var min = 0, max = 100;
 
@@ -106,6 +105,8 @@ var handle = slider.insert("circle", ".track-overlay")
     .attr("class", "handle")
     .attr("r", 9);
 
+// change the map as the slider drags
 function hue(h) {
     handle.attr("cx", x(h));
+    canvas.style("opacity", 10/h);
 }

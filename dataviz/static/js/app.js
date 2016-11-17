@@ -124,7 +124,7 @@ slider.append("line")
     .attr("class", "track-inset")
     .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
     .attr("class", "track-overlay")
-    .call(d3.behavior.drag()
+    .call(d3.drag()
         .on("start.interrupt", function() { slider.interrupt(); })
         .on("start drag", function() { hue(x.invert(d3.event.x)); }));
 

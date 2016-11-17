@@ -1,6 +1,6 @@
 
 /* the following code is modified from: https://bl.ocks.org/rveciana/de0bd586eafd7fcdfe29227ccbdcd511*/
-var width = 960,
+var width = 800,
     height = 500;
 
 // append an HTML5 canvas element to the map div
@@ -57,21 +57,6 @@ d3.request("/raster/1")
             context.fill();
         });
 
-        // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-        var svg = d3.select("body").append("svg")
-            .attr("width", 100)
-            .attr("height", height),
-            // .attr("align","right"),
-          g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-        cb = colorBar(colors, intervals)
-        g.call(cb);
-
-        var title = d3.select("#map").append("text")
-                .attr("x", width/2 )
-                .attr("y", 0) //height +35)
-                .style("text-anchor", "top")
-                .text("Title of Figure");
-
         d3.json('static/topojson/world-110m.json', function(error, world) {
           if (error) throw error;
 
@@ -81,4 +66,72 @@ d3.request("/raster/1")
           path(land);
           context.stroke();
         });
+
+
+    // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
+        var svg = d3.select("#colorRamp").append("svg")
+                .attr("width", 100)
+                .attr("height", height),
+        // .attr("align","right"),
+            g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+            cb = colorBar(colors, intervals);
+        g.call(cb);
+
+        var title = d3.select("#map").append("text")
+            .attr("x", width/2 )
+            .attr("y", 0) //height +35)
+            .style("text-anchor", "top");
+            //.text("Title of Figure")
   });
+
+// time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
+// min/max timeslider values
+var min = 0, max = 100;
+
+var svg = d3.select("svg"),
+    margin = {right: 50, left: 50},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height");
+
+var x = d3.scaleLinear()
+    .domain([min, max])
+    .range([0, width])
+    .clamp(true);
+
+var slider = svg.append("g")
+    .attr("class", "slider")
+    .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
+
+var dragger = d3.behavior.drag()
+  .on("drag", function() { hue(x.invert(d3.event.x)); })
+
+slider.append("line")
+    .attr("class", "track")
+    .attr("x1", x.range()[0])
+    .attr("x2", x.range()[1])
+    .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "track-inset")
+    .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "track-overlay")
+    .call(dragger);
+
+slider.insert("g", ".track-overlay")
+    .attr("class", "ticks")
+    .attr("transform", "translate(0," + 18 + ")")
+    .selectAll("text")
+    .data(x.ticks(10))
+    .enter().append("text")
+    .attr("x", x)
+    .attr("text-anchor", "middle")
+    .text(function(d) { return d; });
+
+// add slider handle element
+var handle = slider.insert("circle", ".track-overlay")
+    .attr("class", "handle")
+    .attr("r", 9);
+
+// change the map as the slider drags
+function hue(h) {
+    handle.attr("cx", x(h));
+    canvas.style("opacity", 10/h);
+}

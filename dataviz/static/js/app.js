@@ -116,6 +116,9 @@ var slider = svg.append("g")
     .attr("class", "slider")
     .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
 
+var dragger = d3.behavior.drag()
+  .on("drag", function() { hue(x.invert(d3.event.x)); })
+
 slider.append("line")
     .attr("class", "track")
     .attr("x1", x.range()[0])
@@ -124,9 +127,7 @@ slider.append("line")
     .attr("class", "track-inset")
     .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
     .attr("class", "track-overlay")
-    .call(d3.drag()
-        .on("start.interrupt", function() { slider.interrupt(); })
-        .on("start drag", function() { hue(x.invert(d3.event.x)); }));
+    .call(dragger);
 
 slider.insert("g", ".track-overlay")
     .attr("class", "ticks")

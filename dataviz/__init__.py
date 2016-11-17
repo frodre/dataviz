@@ -13,4 +13,3 @@ def index():
 @app.route('/raster')
 def raster():
     return flask.send_file('raster/sfctmp.tiff')
-

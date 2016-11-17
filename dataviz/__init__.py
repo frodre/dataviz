@@ -13,9 +13,3 @@ def index():
 @app.route('/raster')
 def raster():
     return flask.send_file('raster/sfctmp.tiff')
-
-# Serve the coastline TopoJSON
-@app.route('/coastlines')
-def coastlines():
-    return flask.send_file('topojson/world-110m.json')
-

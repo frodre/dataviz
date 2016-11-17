@@ -57,21 +57,6 @@ d3.request("/raster/1")
             context.fill();
         });
 
-        // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-        var svg = d3.select("body").append("svg")
-            .attr("width", 100)
-            .attr("height", height),
-            // .attr("align","right"),
-          g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-        cb = colorBar(colors, intervals)
-        g.call(cb);
-
-        var title = d3.select("#map").append("text")
-                .attr("x", width/2 )
-                .attr("y", 0) //height +35)
-                .style("text-anchor", "top")
-                .text("Title of Figure");
-
         d3.json('static/topojson/world-110m.json', function(error, world) {
           if (error) throw error;
 
@@ -81,7 +66,9 @@ d3.request("/raster/1")
           path(land);
           context.stroke();
         });
-  });
+
+
+    // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
         var svg = d3.select("#colorRamp").append("svg")
                 .attr("width", 100)
                 .attr("height", height),
@@ -95,8 +82,7 @@ d3.request("/raster/1")
             .attr("y", 0) //height +35)
             .style("text-anchor", "top");
             //.text("Title of Figure")
-    });
-
+  });
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values

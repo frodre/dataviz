@@ -77,6 +77,7 @@ d3.request("/raster")
 
           var land = topojson.feature(world, world.objects.land);
           context.beginPath();
+          context.strokeStyle = '#EEEEEE';
           path(land);
           context.stroke();
         });

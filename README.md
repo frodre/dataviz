@@ -11,3 +11,6 @@ John Dwyer
 Ryan McCarthy  
 Chenyu Zhang (Diana)  
 
+## Run
+python runserver.py
+go to: localhost:5000 in a web browser

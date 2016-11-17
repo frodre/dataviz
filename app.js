@@ -57,16 +57,14 @@ d3.request("raster-examples/sfctmp.tiff")
             context.fillStyle = colors[i];
             path(d);
             context.fill();
+        });
 
-        console.log(d3.scale.linear().domain([0, 0.5, 1]).range(["blue", "green", "red"]))
         // colorbar : from http://bl.ocks.org/chrisbrich/4209888
         var svg = d3.select("body").append("svg")
-            .attr("width", 1000)
-            .attr("height", 1000),
+            .attr("width", 100)
+            .attr("height", height),
         g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-        cb = colorBar() //.color(colors).size(350).lineWidth(80).precision(4);
+        cb = colorBar(colors,intervals) //.color(colors).size(350).lineWidth(80).precision(4);
         //cb = colorBar().color(d3.scale.linear().domain([-1, 0, 1]).range(["red", "green", "blue"])).size(350).lineWidth(80).precision(4);
         g.call(cb);
-
-        });
-    });
+  });

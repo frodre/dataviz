@@ -1,14 +1,14 @@
-function colorBar(){
-    var maxVal = 300;
-    var minVal = 260;
-    var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20)
-    var colors = d3.ticks(0, 1, intervals.length).map(function (d) {
-            return d3.interpolatePlasma(d);
-        });
+function colorBar(colors, intervals){
+    // var maxVal = 300;
+    // var minVal = 260;
+    // var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20)
+    // var colors = d3.ticks(0, 1, intervalss.length).map(function (d) {
+    //         return d3.interpolatePlasma(d);
+    //     });
     var orient = "right",
     lineWidth = 40, //Function?... because that would be coooooool... not sure if it is compatible with axis.js
     size_ = 300,
-    tickFormat = d3.format("3e"),
+    tickFormat = d3.format(".1f"),
     //color = d3.scale.linear().domain([0, 0.5, 1]).range(["blue", "green", "red"]), //v -> color
     color = d3.scale.linear().domain(intervals).range(colors), //v -> color
     line = d3.svg.line().interpolate("basis"),
@@ -27,7 +27,6 @@ function colorBar(){
             aScale = color.copy().interpolate(d3.interpolate).domain(d3.extent(color.domain())).range([size,0]), //v -> px
             colorExtent = d3.extent(color.domain()),
             normScale = color.copy().domain(color.domain().map(function(d){ return (d - colorExtent[0])/ (colorExtent[1] - colorExtent[0])})),
-
             //Save values for transitions
             oldLineWidth = this.__lineWidth__ || lineWidth;
             oldQuads = this.__quads__ || quads;

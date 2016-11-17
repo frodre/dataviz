@@ -1,15 +1,9 @@
 function colorBar(colors, intervals){
-    // var maxVal = 300;
-    // var minVal = 260;
-    // var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20)
-    // var colors = d3.ticks(0, 1, intervalss.length).map(function (d) {
-    //         return d3.interpolatePlasma(d);
-    //     });
+  // colorbar : from http://bl.ocks.org/chrisbrich/4209888
     var orient = "right",
-    lineWidth = 40, //Function?... because that would be coooooool... not sure if it is compatible with axis.js
+    lineWidth = 40,
     size_ = 300,
     tickFormat = d3.format(".1f"),
-    //color = d3.scale.linear().domain([0, 0.5, 1]).range(["blue", "green", "red"]), //v -> color
     color = d3.scale.linear().domain(intervals).range(colors), //v -> color
     line = d3.svg.line().interpolate("basis"),
     precision = 8,
@@ -41,6 +35,7 @@ function colorBar(colors, intervals){
             bTransform = function(selection,f,lw){
                 selection.style("fill", function(d) { return normScale(f(d).t); })
                     .style("stroke", function(d) { return normScale(f(d).t); })
+                    .style("pos_right", function(d) { return normScale(f(d).t); })
                     .attr("d", function(d) { var p = f(d); return lineJoin(p[0], p[1], p[2], p[3], lw); });};
 
             bEnter.call(bTransform,function(d){return oldQuads[oldQuads.length - 1]},oldLineWidth); // enter from last of oldQuad

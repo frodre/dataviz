@@ -16,7 +16,8 @@ var path = d3.geoPath()
     .context(context);
 
 // request tiff and process
-d3.request("../raster/sfctmp.tiff")
+d3.request("/raster/1")
+
     .responseType('arraybuffer')
     // on successful request, do the following
     .get(function (error, tiffData) {
@@ -37,7 +38,7 @@ d3.request("../raster/sfctmp.tiff")
         }
 
         // interpollate raster color values
-        var maxVal = 70.0, minVal = 0.0;
+        var maxVal = 330, minVal = 220;
         // set intervals within min/max range
         var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20);
 

@@ -72,5 +72,12 @@ d3.request("/raster")
                 .style("text-anchor", "top")
                 .text("Title of Figure");
 
+        d3.json('/coastlines', function(error, world) {
+          if (error) throw error;
 
+          var land = topojson.feature(world, world.objects.land);
+          context.beginPath();
+          path(land);
+          context.stroke();
+        });
   });

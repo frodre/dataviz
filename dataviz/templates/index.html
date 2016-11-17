@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="static/css/style.css"/>
 </head>
 <body>
 <div>
@@ -20,7 +20,7 @@
 <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
 
 <!-- GeoTiff reader -->
-<script src="./geotiff.js"></script>
+<script src="static/js/geotiff.js"></script>
 
 <!-- D3 Plugin for interpollating colors, numbers, etc. -->
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
@@ -45,7 +45,11 @@
 <!-- Marching squares isobands/isolines -->
 <script src="https://npmcdn.com/d3-marching-squares@0.0.4"></script>
 
-<script src="./app.js"></script>
+<!-- colorbar -->
+<script type="text/javascript" src="static/js/colorbar.js"></script>
+<link type="text/css" rel="stylesheet" href="static/css/colorbar.css"></link>
+
+<script src="static/js/app.js"></script>
 
 </body>
 </html>

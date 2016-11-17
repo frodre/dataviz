@@ -16,7 +16,7 @@ var path = d3.geoPath()
     .context(context);
 
 // request tiff and process
-d3.request("raster-examples/sfctmp.tiff")
+d3.request("/raster")
     .responseType('arraybuffer')
     // on successful request, do the following
     .get(function (error, tiffData) {
@@ -46,7 +46,6 @@ d3.request("raster-examples/sfctmp.tiff")
             return d3.interpolatePlasma(d);
         });
 
-
         geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
         var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
 
@@ -57,6 +56,20 @@ d3.request("raster-examples/sfctmp.tiff")
             path(d);
             context.fill();
         });
+        // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
+        var svg = d3.select("body").append("svg")
+                .attr("width", 100)
+                .attr("height", height),
+        // .attr("align","right"),
+            g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+            cb = colorBar(colors, intervals)
+        g.call(cb);
+
+        var title = d3.select("#map").append("text")
+            .attr("x", width/2 )
+            .attr("y", 0) //height +35)
+            .style("text-anchor", "top")
+            .text("Title of Figure");
     });
 
 

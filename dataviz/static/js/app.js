@@ -16,7 +16,7 @@ var path = d3.geoPath()
     .context(context);
 
 // request tiff and process
-d3.request("raster-examples/sfctmp.tiff")
+d3.request("/raster")
     .responseType('arraybuffer')
     // on successful request, do the following
     .get(function (error, tiffData) {

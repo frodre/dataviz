@@ -1,6 +1,6 @@
 
 /* the following code is modified from: https://bl.ocks.org/rveciana/de0bd586eafd7fcdfe29227ccbdcd511*/
-var width = 960,
+var width = 800,
     height = 500;
 
 // append an HTML5 canvas element to the map div
@@ -57,19 +57,19 @@ d3.request("../raster/sfctmp.tiff")
             context.fill();
         });
         // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#colorRamp").append("svg")
                 .attr("width", 100)
                 .attr("height", height),
         // .attr("align","right"),
             g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-            cb = colorBar(colors, intervals)
+            cb = colorBar(colors, intervals);
         g.call(cb);
 
         var title = d3.select("#map").append("text")
             .attr("x", width/2 )
             .attr("y", 0) //height +35)
-            .style("text-anchor", "top")
-            .text("Title of Figure");
+            .style("text-anchor", "top");
+            //.text("Title of Figure")
     });
 
 
@@ -99,7 +99,7 @@ slider.append("line")
     .attr("class", "track-inset")
     .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
     .attr("class", "track-overlay")
-    .call(d3.drag()
+    .call(d3.behavior.drag()
         .on("start.interrupt", function() { slider.interrupt(); })
         .on("start drag", function() { hue(x.invert(d3.event.x)); }));
 

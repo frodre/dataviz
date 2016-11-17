@@ -1,4 +1,13 @@
 /* time slider styling */
+canvas {
+    display: inline-block;
+}
+
+.mapContainer {
+    width: 500px;
+    height: 500px;
+}
+
 .ticks {
     font: 10px sans-serif;
 }

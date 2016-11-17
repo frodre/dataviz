@@ -1,0 +1,17 @@
+body {
+    font: 16px sans-serif;
+}
+
+.colorbar .axis line{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.colorbar .axis .domain{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+/* colorbar :modified  from http://bl.ocks.org/chrisbrich/4209888 */

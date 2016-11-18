@@ -156,7 +156,7 @@ slider.insert("g", ".track-overlay")
     .attr("x", x)
     .attr("text-anchor", "middle")
     .text(function(d) {
-        return "Year " + (d+1);
+        return "Month " + (d+1);
     });
 
 // add slider handle element

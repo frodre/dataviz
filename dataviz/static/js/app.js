@@ -168,13 +168,18 @@ var handle = slider.insert("circle", ".track-overlay")
 function hue(h) {
     handle.attr("cx", x(h));
 
+    var y = (h%1);
+    var power = 1./3.; //Change this to mess with opacity transition
+    var opacity1 = Math.pow( 1-y, power);
+    var opacity2 = Math.pow(y, power);
+
     if ((h % 1)<0.5) {
-        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", 1-(h % 1)); // lower year
-        d3.select("#canvas"+ String(Math.round(h)+2)).style("opacity", (h % 1)); // higher year
+        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", opacity1); // lower year
+        d3.select("#canvas"+ String(Math.round(h)+2)).style("opacity", opacity2); // higher year
         d3.selectAll(".map:not(#canvas" + String(Math.round(h)+1) + "):not(#canvas" + String(Math.round(h)+2) + ")").style("opacity", 0); // 0 opacity for other years
     } else {
-        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", (h % 1)); // lower year
-        d3.select("#canvas"+ String(Math.round(h))).style("opacity", 1-(h % 1)); // higher year
+        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", opacity2); // lower year
+        d3.select("#canvas"+ String(Math.round(h))).style("opacity", opacity1); // higher year
         d3.selectAll(".map:not(#canvas" + String(Math.round(h)+1) + "):not(#canvas" + String(Math.round(h)) + ")").style("opacity", 0); // 0 opacity for other years
     }
 }

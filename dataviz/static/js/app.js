@@ -15,74 +15,96 @@ var path = d3.geoPath()
     .projection(projection)
     .context(context);
 
-// request tiff and process
-d3.request("/raster/1")
-    .responseType('arraybuffer')
-    // on successful request, do the following
-    .get(function (error, tiffData) {
-        // read GeoTiff
-        var tiff = GeoTIFF.parse(tiffData.response);
-        var image = tiff.getImage();
-        var rasters = image.readRasters();
+var years = [1,2,3,4];
 
-        // loop through each element in the first dimension of the array
-        var data = new Array(image.getHeight());
-        for (var j = 0; j < image.getHeight(); j++) {
+// get tiff for each year
+getTiffs(years);
 
-            // loop through each element in the second dimension of the array
-            data[j] = new Array(image.getWidth());
-            for (var i = 0; i < image.getWidth(); i++) {
-                data[j][i] = rasters[0][i + j * image.getWidth()];
+// draw each tiff on the map
+function getTiffs(array) {
+    // use a waterfall pattern to run an async function on each item in a list in order
+    function processTiffs(list, iterator) {
+        var nextItemIndex = 0;  //keep track of the index of the next item to be processed
+
+        function report() {
+            nextItemIndex++;
+
+            // if nextItemIndex equals the number of items in list, then we're done
+            if(nextItemIndex !== list.length) {
+                // otherwise, call the iterator on the next item
+                iterator(list[nextItemIndex], report);
             }
         }
 
-        // interpollate raster color values
-        var maxVal = 330, minVal = 220;
-        // set intervals within min/max range
-        var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20);
+        // instead of starting all the iterations, we only start the 1st one
+        iterator(list[0], report);
+    }
 
-        // assign a color to each interval
-        var colors = d3.ticks(0, 1, intervals.length).map(function (d) {
-            return d3.interpolatePlasma(d);
-        });
+    // process each tiff asynchronously
+    processTiffs(years, function (val, report) {
+        // request tiff
+        d3.request("/raster/" + val)
 
-        geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
-        var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
+            .responseType('arraybuffer')
+            // on successful request, do the following
+            .get(function (error, tiffData) {
+                // read GeoTiff
+                var tiff = GeoTIFF.parse(tiffData.response);
+                var image = tiff.getImage();
+                var rasters = image.readRasters();
 
-        // color bands
-        bands.features.forEach(function(d, i) {
-            context.beginPath();
-            context.fillStyle = colors[i];
-            path(d);
-            context.fill();
-        });
+                // loop through each element in the first dimension of the array
+                var data = new Array(image.getHeight());
+                for (var j = 0; j < image.getHeight(); j++) {
 
-        d3.json('static/topojson/world-110m.json', function(error, world) {
-          if (error) throw error;
+                    // loop through each element in the second dimension of the array
+                    data[j] = new Array(image.getWidth());
+                    for (var i = 0; i < image.getWidth(); i++) {
+                        data[j][i] = rasters[0][i + j * image.getWidth()];
+                    }
+                }
 
-          var land = topojson.feature(world, world.objects.land);
-          context.beginPath();
-          context.strokeStyle = '#EEEEEE';
-          path(land);
-          context.stroke();
-        });
+                // interpollate raster color values
+                var maxVal = 330, minVal = 220;
+                // set intervals within min/max range
+                var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20);
 
+                // assign a color to each interval
+                var colors = d3.ticks(0, 1, intervals.length).map(function (d) {
+                    return d3.interpolatePlasma(d);
+                });
 
-    // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-        var svg = d3.select("#colorRamp").append("svg")
-                .attr("width", 100)
-                .attr("height", height),
-        // .attr("align","right"),
-            g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-            cb = colorBar(colors, intervals);
-        g.call(cb);
+                geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
+                var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
 
-        var title = d3.select("#map").append("text")
-            .attr("x", width/2 )
-            .attr("y", 0) //height +35)
-            .style("text-anchor", "top");
-            //.text("Title of Figure")
-  });
+                // call the function on the next item in the list
+                report();
+
+                // color bands
+                bands.features.forEach(function(d, i) {
+                    context.beginPath();
+                    context.fillStyle = colors[i];
+                    path(d);
+                    context.fill();
+                });
+                // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
+                var svg = d3.select("#colorRamp").append("svg")
+                        .attr("width", 100)
+                        .attr("height", height),
+                // .attr("align","right"),
+                    g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+                    cb = colorBar(colors, intervals);
+                g.call(cb);
+
+                var title = d3.select("#map").append("text")
+                    .attr("x", width/2 )
+                    .attr("y", 0) //height +35)
+                    .style("text-anchor", "top");
+                //.text("Title of Figure")
+
+            });
+    });
+}
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values

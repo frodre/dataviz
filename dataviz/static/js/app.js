@@ -75,17 +75,14 @@ function getTiffs(array) {
                 geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
                 var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
 
-                // call the function on the next item in the list
-                report();
-
-                // color bands
+                // DRAW COLORBANDS
                 bands.features.forEach(function(d, i) {
                     context.beginPath();
                     context.fillStyle = colors[i];
                     path(d);
                     context.fill();
                 });
-
+                // COLORBAR
                 if (ind==0) {
                   // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
                     var svg = d3.select("#colorRamp").append("svg")
@@ -95,14 +92,22 @@ function getTiffs(array) {
                         cb = colorBar(colors, intervals);
                     g.call(cb);
                   };
-              d3.json('static/topojson/world-110m.json', function(error, world) {
-                if (error) throw error;
-                var land = topojson.feature(world, world.objects.land);
-                context.beginPath();
-                context.strokeStyle = '#EEEEEE';
-                path(land);
-                context.stroke();
-                });
+                // COASTLINES
+                d3.json('static/topojson/world-110m.json', function(error, world) {
+                  if (error) throw error;
+                  var land = topojson.feature(world, world.objects.land);
+                  context.beginPath();
+                  context.strokeStyle = '#EEEEEE';
+                  path(land);
+                  context.stroke();
+
+                  // call the function on the next item in the list
+                  report();
+                  });
+
+
+
+
             });
     });
 

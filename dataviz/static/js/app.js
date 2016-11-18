@@ -28,20 +28,18 @@ function getTiffs(array) {
 
         function report() {
             nextItemIndex++;
-
             // if nextItemIndex equals the number of items in list, then we're done
             if(nextItemIndex !== list.length) {
                 // otherwise, call the iterator on the next item
-                iterator(list[nextItemIndex], report);
+                iterator(nextItemIndex, list[nextItemIndex], report);
             }
         }
-
         // instead of starting all the iterations, we only start the 1st one
-        iterator(list[0], report);
+        iterator(0, list[0], report);
     }
 
     // process each tiff asynchronously
-    processTiffs(years, function (val, report) {
+    processTiffs(years, function (ind, val, report) {
         // request tiff
         d3.request("/raster/" + val)
 
@@ -87,15 +85,16 @@ function getTiffs(array) {
                     path(d);
                     context.fill();
                 });
+
                 // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-                var svg = d3.select("#colorRamp").append("svg")
-                        .attr("width", 100)
-                        .attr("height", height),
-                // .attr("align","right"),
-                    g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-                    cb = colorBar(colors, intervals);
-                g.call(cb);
-                
+                if (ind==0) {
+                    var svg = d3.select("#colorRamp").append("svg")
+                            .attr("width", 100)
+                            .attr("height", height),
+                        g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+                        cb = colorBar(colors, intervals);
+                    g.call(cb);
+                }
                 d3.json('static/topojson/world-110m.json', function(error, world) {
                   if (error) throw error;
 
@@ -107,7 +106,10 @@ function getTiffs(array) {
                 });
             });
     });
+
 }
+
+
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values

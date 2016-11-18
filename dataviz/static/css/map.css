@@ -1,20 +1,23 @@
 .title {
-    width: 60px;
+    width: 600px;
+    margin: 0 auto;
 }
 
 .title h3 {
-    margin: 0 auto;
+
 }
 
 canvas {
     width: 800px;
     height: 500px;
+    z-index: 1;
 }
 
 .canvasContainer {
     width: 800px;
     height: 500px;
     position: relative;
+    z-index: 1;
 }
 
 .canvasContainer svg {
@@ -24,6 +27,8 @@ canvas {
     position: absolute;
     left: 0;
     top: 0;
+    z-index: 1;
+    margin: 0 auto;
 }
 
 #canvas1 {

@@ -2,6 +2,8 @@
     width: 800px;
     height: 50px;
     display: block;
+    margin: 0 auto;
+    z-index: 2;
 }
 
 .ticks {
@@ -36,5 +38,6 @@
     stroke: #000;
     stroke-opacity: 0.5;
     stroke-width: 1.25px;
+    z-index: 2;
 }
 

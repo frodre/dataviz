@@ -3,7 +3,7 @@
 var width = 800,
     height = 500;
 
-var years = [1,2,3,4];
+var years = [1,2,3,4,5,6,7,8,9,10,11,12];
 
 // get tiff for each year
 getTiffs(years);
@@ -20,7 +20,7 @@ function getTiffs(array) {
             // if nextItemIndex equals the number of items in list, then we're done
             if(nextItemIndex !== list.length) {
                 // otherwise, call the iterator on the next item
-                iterator(nextItemIndex, list[nextItemIndex], report);
+                iterator(nextItemIndex, list[nextItemIndex], report)
             }
         }
         // instead of starting all the iterations, we only start the 1st one
@@ -58,10 +58,11 @@ function getTiffs(array) {
                 for (var j = 0; j < image.getHeight(); j++) {
 
                     // loop through each element in the second dimension of the array
-                    data[j] = new Array(image.getWidth());
+                    data[j] = new Array(image.getWidth()+1);
                     for (var i = 0; i < image.getWidth(); i++) {
                         data[j][i] = rasters[0][i + j * image.getWidth()];
                     }
+                    data[j][image.getWidth()] = data[j][image.getWidth()-1]
                 }
 
                 // interpollate raster color values
@@ -74,7 +75,7 @@ function getTiffs(array) {
                     return d3.interpolatePlasma(d);
                 });
 
-                geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
+                geoTransform = [0.5, 1.875, 0, 88.5, 0, -1.9]; //x-interval corrected to match borders
                 var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
 
                 // DRAW COLORBANDS

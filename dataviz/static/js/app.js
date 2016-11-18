@@ -23,6 +23,7 @@ getTiffs(years);
 
 // draw each tiff on the map
 function getTiffs(array) {
+
     // use a waterfall pattern to run an async function on each item in a list in order
     function processTiffs(list, iterator) {
         var nextItemIndex = 0;  //keep track of the index of the next item to be processed
@@ -102,18 +103,18 @@ function getTiffs(array) {
                     context.fill();
                 });
                 // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-                var svg = d3.select("#colorRamp").append("svg")
-                        .attr("width", 100)
-                        .attr("height", height),
-                // .attr("align","right"),
-                    g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-                    cb = colorBar(colors, intervals);
-                g.call(cb);
-
-                var title = d3.select("#map").append("text")
-                    .attr("x", width/2 )
-                    .attr("y", 0) //height +35)
-                    .style("text-anchor", "top");
+                //var svg = d3.select("#colorRamp").append("svg")
+                //        .attr("width", 100)
+                //        .attr("height", height),
+                //// .attr("align","right"),
+                //    g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+                //    cb = colorBar(colors, intervals);
+                //g.call(cb);
+                //
+                //var title = d3.select("#map").append("text")
+                //    .attr("x", width/2 )
+                //    .attr("y", 0) //height +35)
+                //    .style("text-anchor", "top");
                 //.text("Title of Figure")
 
             });
@@ -122,7 +123,7 @@ function getTiffs(array) {
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values
-var min = 0, max = 4;
+var min = 0, max = 3;
 
 var svg = d3.select("#slider"),
     margin = {right: 50, left: 50},
@@ -171,5 +172,14 @@ var handle = slider.insert("circle", ".track-overlay")
 // change the map as the slider drags
 function hue(h) {
     handle.attr("cx", x(h));
-    canvas.style("opacity", 10/h);
+
+    if ((h % 1)<0.5) {
+        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", 1-(h % 1)); // lower year
+        d3.select("#canvas"+ String(Math.round(h)+2)).style("opacity", (h % 1)); // higher year
+        d3.selectAll(".map:not(#canvas" + String(Math.round(h)+1) + "):not(#canvas" + String(Math.round(h)+2) + ")").style("opacity", 0); // 0 opacity for other years
+    } else {
+        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", (h % 1)); // lower year
+        d3.select("#canvas"+ String(Math.round(h))).style("opacity", 1-(h % 1)); // higher year
+        d3.selectAll(".map:not(#canvas" + String(Math.round(h)+1) + "):not(#canvas" + String(Math.round(h)) + ")").style("opacity", 0); // 0 opacity for other years
+    }
 }

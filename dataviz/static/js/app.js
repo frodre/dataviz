@@ -86,24 +86,26 @@ function getTiffs(array) {
                     context.fill();
                 });
 
-                // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
                 if (ind==0) {
+                  // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
                     var svg = d3.select("#colorRamp").append("svg")
                             .attr("width", 100)
                             .attr("height", height),
                         g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
                         cb = colorBar(colors, intervals);
                     g.call(cb);
-                }
-                d3.json('static/topojson/world-110m.json', function(error, world) {
-                  if (error) throw error;
 
-                  var land = topojson.feature(world, world.objects.land);
-                  context.beginPath();
-                  context.strokeStyle = '#EEEEEE';
-                  path(land);
-                  context.stroke();
-                });
+                  d3.json('static/topojson/world-110m.json', function(error, world) {
+                    if (error) throw error;
+
+                    var land = topojson.feature(world, world.objects.land);
+                    context.beginPath();
+                    context.strokeStyle = '#EEEEEE';
+                    path(land);
+                    context.stroke();
+                    });
+                };
+
             });
     });
 

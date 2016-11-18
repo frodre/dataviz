@@ -29,6 +29,16 @@ function getTiffs(array) {
 
     // process each tiff asynchronously
     processTiffs(years, function (ind, val, report) {
+
+      // Load meta data for plotting
+      d3.json('static/geometadata/meta.json', function(error, jsondata) {
+        if (error) throw error;
+        var figtitle = jsondata[0]['title']
+        var minVal   = jsondata[0]['minval']
+        var maxVal   = jsondata[0]['maxval']
+
+
+
         // append an HTML5 canvas element to the map div
         var canvas = d3.select("#canvas" + val).select("canvas")
             .attr("width", width)
@@ -65,8 +75,7 @@ function getTiffs(array) {
                     data[j][image.getWidth()] = data[j][image.getWidth()-1]
                 }
 
-                // interpollate raster color values
-                var maxVal = 330, minVal = 220;
+
                 // set intervals within min/max range
                 var intervals = d3.range(minVal, maxVal + (maxVal - minVal) / 20, (maxVal - minVal) / 20);
 
@@ -111,6 +120,7 @@ function getTiffs(array) {
 
             });
     });
+  });
 
 }
 

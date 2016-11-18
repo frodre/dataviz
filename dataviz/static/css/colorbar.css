@@ -6,8 +6,8 @@ body {
     float: right;
     display: inline-block;
     position: absolute;
-    top: 20px;
-    right: 50px;
+    top: 60px;
+    right: 100px;
 }
 
 .colorbar .axis line{

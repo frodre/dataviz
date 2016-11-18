@@ -118,7 +118,7 @@ function getTiffs(array) {
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values
-var min = 0, max = 3;
+var min = 0, max = years.length-1;
 
 var svg = d3.select("#slider"),
     margin = {right: 50, left: 50},

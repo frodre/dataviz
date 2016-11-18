@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="../static/css/style.css"/>
+    <link type="text/css" rel="stylesheet" href="../static/css/slider.css"/>
     <link type="text/css" rel="stylesheet" href="../static/css/colorbar.css"/>
 </head>
 <body>
@@ -11,8 +11,32 @@
     <h3>Data Visualization with Temporal Raster Datasets</h3>
 </div>
 <div class="mapContainer">
-    <div id="map" width="500" height="500"></div>
+    <div id="map" width="500" height="500" diplay="block"></div>
     <div id="colorRamp" width="100" height="500"></div>
+    <svg id="slider"></svg>
+    <div>
+        <svg id="canvas1">
+            <foreignObject>
+                <canvas display="inline-block" class="map"></canvas>
+            </foreignObject>
+        </svg>
+        <svg id="canvas2">
+            <foreignObject>
+                <canvas display="inline-block" class="map"></canvas>
+            </foreignObject>
+        </svg>
+        <svg id="canvas3">
+            <foreignObject>
+                <canvas display="inline-block" class="map"></canvas>
+            </foreignObject>
+        </svg>
+        <svg id="canvas4">
+            <foreignObject>
+                <canvas display="inline-block" class="map"></canvas>
+            </foreignObject>
+        </svg>
+    </div>
+
 </div>
 <svg width="500" height="500"></svg>
 

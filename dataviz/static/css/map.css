@@ -1,4 +1,10 @@
+.title {
+    width: 60px;
+}
 
+.title h3 {
+    margin: 0 auto;
+}
 
 canvas {
     width: 800px;

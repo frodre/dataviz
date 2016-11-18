@@ -28,20 +28,18 @@ function getTiffs(array) {
 
         function report() {
             nextItemIndex++;
-
             // if nextItemIndex equals the number of items in list, then we're done
             if(nextItemIndex !== list.length) {
                 // otherwise, call the iterator on the next item
-                iterator(list[nextItemIndex], report);
+                iterator(nextItemIndex, list[nextItemIndex], report);
             }
         }
-
         // instead of starting all the iterations, we only start the 1st one
-        iterator(list[0], report);
+        iterator(0, list[0], report);
     }
 
     // process each tiff asynchronously
-    processTiffs(years, function (val, report) {
+    processTiffs(years, function (ind, val, report) {
         // request tiff
         d3.request("/raster/" + val)
 
@@ -77,34 +75,45 @@ function getTiffs(array) {
                 geoTransform = [0, 0.500695, 0, 90, 0, -0.5]; //x-interval corrected to match borders
                 var bands = d3marchingsquares.isobands(data, geoTransform, intervals);
 
-                // call the function on the next item in the list
-                report();
-
-                // color bands
+                // DRAW COLORBANDS
                 bands.features.forEach(function(d, i) {
                     context.beginPath();
                     context.fillStyle = colors[i];
                     path(d);
                     context.fill();
                 });
-                // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
-                var svg = d3.select("#colorRamp").append("svg")
-                        .attr("width", 100)
-                        .attr("height", height),
-                // .attr("align","right"),
-                    g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
-                    cb = colorBar(colors, intervals);
-                g.call(cb);
+                // COLORBAR
+                if (ind==0) {
+                  // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
+                    var svg = d3.select("#colorRamp").append("svg")
+                            .attr("width", 100)
+                            .attr("height", height),
+                        g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
+                        cb = colorBar(colors, intervals);
+                    g.call(cb);
+                  };
+                // COASTLINES
+                d3.json('static/topojson/world-110m.json', function(error, world) {
+                  if (error) throw error;
+                  var land = topojson.feature(world, world.objects.land);
+                  context.beginPath();
+                  context.strokeStyle = '#EEEEEE';
+                  path(land);
+                  context.stroke();
 
-                var title = d3.select("#map").append("text")
-                    .attr("x", width/2 )
-                    .attr("y", 0) //height +35)
-                    .style("text-anchor", "top");
-                //.text("Title of Figure")
+                  // call the function on the next item in the list
+                  report();
+                  });
+
+
+
 
             });
     });
+
 }
+
+
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values

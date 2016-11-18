@@ -5,6 +5,19 @@ var width = 800,
 
 var years = [1,2,3,4,5,6,7,8,9,10,11,12];
 
+var canvasDiv = d3.select('.canvasContainer')
+canvasElem = document.createElement('foreignObject')
+canvasElem.innerHTML = '<canvas></canvas>'
+
+for(var i=0; i < years.length; i++){
+  canvasElem = document.createElement('foreignObject')
+  canvasElem.innerHTML = '<canvas></canvas>'
+  svg_elem = document.createElement('svg')
+  svg_elem.setAttribute('id', 'canvas'+years[i])
+  svg_elem.setAttribute('class', 'map')
+  svg_elem.appendChild(canvasElem)
+  canvasDiv.node().appendChild(svg_elem)
+}
 // get tiff for each year
 getTiffs(years);
 
@@ -118,7 +131,7 @@ function getTiffs(array) {
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values
-var min = 0, max = 3;
+var min = 0, max = 11;
 
 var svg = d3.select("#slider"),
     margin = {right: 50, left: 50},

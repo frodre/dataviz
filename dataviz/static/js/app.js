@@ -3,18 +3,6 @@
 var width = 800,
     height = 500;
 
-// append an HTML5 canvas element to the map div
-var canvas = d3.select("#map").append("canvas")
-    .attr("width", width)
-    .attr("height", height);
-var context = canvas.node().getContext("2d");
-
-// define projection
-var projection = d3.geoEquirectangular();
-var path = d3.geoPath()
-    .projection(projection)
-    .context(context);
-
 var years = [1,2,3,4];
 
 // get tiff for each year
@@ -22,6 +10,7 @@ getTiffs(years);
 
 // draw each tiff on the map
 function getTiffs(array) {
+
     // use a waterfall pattern to run an async function on each item in a list in order
     function processTiffs(list, iterator) {
         var nextItemIndex = 0;  //keep track of the index of the next item to be processed
@@ -40,12 +29,25 @@ function getTiffs(array) {
 
     // process each tiff asynchronously
     processTiffs(years, function (ind, val, report) {
+        // append an HTML5 canvas element to the map div
+        var canvas = d3.select("#canvas" + val).select("canvas")
+            .attr("width", width)
+            .attr("height", height);
+        var context = canvas.node().getContext("2d");
+
+        // define projection
+        var projection = d3.geoEquirectangular();
+        var path = d3.geoPath()
+            .projection(projection)
+            .context(context);
+
         // request tiff
         d3.request("/raster/" + val)
 
             .responseType('arraybuffer')
             // on successful request, do the following
             .get(function (error, tiffData) {
+
                 // read GeoTiff
                 var tiff = GeoTIFF.parse(tiffData.response);
                 var image = tiff.getImage();
@@ -82,6 +84,7 @@ function getTiffs(array) {
                     path(d);
                     context.fill();
                 });
+
                 // COLORBAR
                 if (ind==0) {
                   // colorbar : modified from http://bl.ocks.org/chrisbrich/4209888
@@ -105,9 +108,6 @@ function getTiffs(array) {
                   report();
                   });
 
-
-
-
             });
     });
 
@@ -117,24 +117,24 @@ function getTiffs(array) {
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values
-var min = 0, max = 100;
+var min = 0, max = 3;
 
-var svg = d3.select("svg"),
+var svg = d3.select("#slider"),
     margin = {right: 50, left: 50},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height");
+    sliderwidth = 700,
+    sliderheight = 50;
 
 var x = d3.scaleLinear()
     .domain([min, max])
-    .range([0, width])
+    .range([0, sliderwidth])
     .clamp(true);
 
 var slider = svg.append("g")
     .attr("class", "slider")
-    .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
+    .attr("transform", "translate(" + 50 + "," + sliderheight / 2 + ")");
 
 var dragger = d3.behavior.drag()
-  .on("drag", function() { hue(x.invert(d3.event.x)); })
+  .on("drag", function() { hue(x.invert(d3.event.x)); });
 
 slider.append("line")
     .attr("class", "track")
@@ -150,11 +150,13 @@ slider.insert("g", ".track-overlay")
     .attr("class", "ticks")
     .attr("transform", "translate(0," + 18 + ")")
     .selectAll("text")
-    .data(x.ticks(10))
+    .data(x.ticks(years.length-1))
     .enter().append("text")
     .attr("x", x)
     .attr("text-anchor", "middle")
-    .text(function(d) { return d; });
+    .text(function(d) {
+        return "Year " + (d+1);
+    });
 
 // add slider handle element
 var handle = slider.insert("circle", ".track-overlay")
@@ -164,5 +166,14 @@ var handle = slider.insert("circle", ".track-overlay")
 // change the map as the slider drags
 function hue(h) {
     handle.attr("cx", x(h));
-    canvas.style("opacity", 10/h);
+
+    if ((h % 1)<0.5) {
+        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", 1-(h % 1)); // lower year
+        d3.select("#canvas"+ String(Math.round(h)+2)).style("opacity", (h % 1)); // higher year
+        d3.selectAll(".map:not(#canvas" + String(Math.round(h)+1) + "):not(#canvas" + String(Math.round(h)+2) + ")").style("opacity", 0); // 0 opacity for other years
+    } else {
+        d3.select("#canvas" + String(Math.round(h)+1)).style("opacity", (h % 1)); // lower year
+        d3.select("#canvas"+ String(Math.round(h))).style("opacity", 1-(h % 1)); // higher year
+        d3.selectAll(".map:not(#canvas" + String(Math.round(h)+1) + "):not(#canvas" + String(Math.round(h)) + ")").style("opacity", 0); // 0 opacity for other years
+    }
 }

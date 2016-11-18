@@ -4,16 +4,17 @@ var width = 800,
     height = 500;
 
 // append an HTML5 canvas element to the map div
-var canvas = d3.select("#map").append("canvas")
-    .attr("width", width)
-    .attr("height", height);
-var context = canvas.node().getContext("2d");
-
-// define projection
-var projection = d3.geoEquirectangular();
-var path = d3.geoPath()
-    .projection(projection)
-    .context(context);
+//var canvas = d3.select("#map").append("canvas")
+//    .attr("width", width)
+//    .attr("height", height)
+//    .attr("class", "canvas" + 1);
+//var context = canvas.node().getContext("2d");
+//
+//// define projection
+//var projection = d3.geoEquirectangular();
+//var path = d3.geoPath()
+//    .projection(projection)
+//    .context(context);
 
 var years = [1,2,3,4];
 
@@ -42,12 +43,25 @@ function getTiffs(array) {
 
     // process each tiff asynchronously
     processTiffs(years, function (val, report) {
+        // append an HTML5 canvas element to the map div
+        var canvas = d3.select("#canvas" + val).select("canvas")
+            .attr("width", width)
+            .attr("height", height);
+        var context = canvas.node().getContext("2d");
+
+        // define projection
+        var projection = d3.geoEquirectangular();
+        var path = d3.geoPath()
+            .projection(projection)
+            .context(context);
+
         // request tiff
         d3.request("/raster/" + val)
 
             .responseType('arraybuffer')
             // on successful request, do the following
             .get(function (error, tiffData) {
+
                 // read GeoTiff
                 var tiff = GeoTIFF.parse(tiffData.response);
                 var image = tiff.getImage();

@@ -1,0 +1,23 @@
+canvas {
+    width: 800px;
+    height: 500px;
+}
+
+.canvasContainer {
+    width: 800px;
+    height: 500px;
+    position: relative;
+}
+
+.canvasContainer svg {
+    opacity: 0;
+    width: 800px;
+    height: 500px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#canvas1 {
+    opacity: 1;
+}

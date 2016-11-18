@@ -95,13 +95,16 @@ function getTiffs(array) {
                     g = svg.append("g").attr("transform","translate(10,10)").classed("colorbar",true),
                     cb = colorBar(colors, intervals);
                 g.call(cb);
+                
+                d3.json('static/topojson/world-110m.json', function(error, world) {
+                  if (error) throw error;
 
-                var title = d3.select("#map").append("text")
-                    .attr("x", width/2 )
-                    .attr("y", 0) //height +35)
-                    .style("text-anchor", "top");
-                //.text("Title of Figure")
-
+                  var land = topojson.feature(world, world.objects.land);
+                  context.beginPath();
+                  context.strokeStyle = '#EEEEEE';
+                  path(land);
+                  context.stroke();
+                });
             });
     });
 }

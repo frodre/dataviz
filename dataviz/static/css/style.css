@@ -1,11 +1,7 @@
-/* time slider styling */
-canvas {
-    display: inline-block;
-}
-
-.mapContainer {
-    width: 500px;
-    height: 500px;
+#slider {
+    width: 800px;
+    height: 50px;
+    display: block;
 }
 
 .ticks {

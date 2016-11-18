@@ -108,24 +108,24 @@ function getTiffs(array) {
 
 // time slider (code modified from: https://bl.ocks.org/mbostock/6452972)
 // min/max timeslider values
-var min = 0, max = 100;
+var min = 0, max = 4;
 
-var svg = d3.select("svg"),
+var svg = d3.select("#slider"),
     margin = {right: 50, left: 50},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height");
+    sliderwidth = 700,
+    sliderheight = 50;
 
 var x = d3.scaleLinear()
     .domain([min, max])
-    .range([0, width])
+    .range([0, sliderwidth])
     .clamp(true);
 
 var slider = svg.append("g")
     .attr("class", "slider")
-    .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
+    .attr("transform", "translate(" + 50 + "," + sliderheight / 2 + ")");
 
 var dragger = d3.behavior.drag()
-  .on("drag", function() { hue(x.invert(d3.event.x)); })
+  .on("drag", function() { hue(x.invert(d3.event.x)); });
 
 slider.append("line")
     .attr("class", "track")
@@ -141,11 +141,13 @@ slider.insert("g", ".track-overlay")
     .attr("class", "ticks")
     .attr("transform", "translate(0," + 18 + ")")
     .selectAll("text")
-    .data(x.ticks(years.length))
+    .data(x.ticks(years.length-1))
     .enter().append("text")
     .attr("x", x)
     .attr("text-anchor", "middle")
-    .text(function(d) { return d; });
+    .text(function(d) {
+        return "Year " + (d+1);
+    });
 
 // add slider handle element
 var handle = slider.insert("circle", ".track-overlay")
